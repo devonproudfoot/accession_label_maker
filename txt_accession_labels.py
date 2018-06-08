@@ -1,4 +1,4 @@
-import argparse, sys
+import argparse, sys, os
 from datetime import datetime
 
 def get_arguments():
@@ -12,6 +12,7 @@ def get_arguments():
     return donor, donor_number
 
 def file_create(labels, donor):
+    os.chdir("..") #use this to save the labels to the directory of your choice
     file_name = donor + ".txt"
     label_file = open(file_name, "w")
     label_file.write(labels)
@@ -46,14 +47,18 @@ def container_types():
 
 def label_maker(donor, number, date, containers):
     labels_list = []
-    for k, v in containers.items():
-        count = 1
-        while count <= v:
-            label_line = donor + "\n" + "Donor no. " + number + "\n" + date + "\n" + k + " " + str(count) + " of " + str(v)
-            count = count + 1
-            labels_list.append(label_line)
-    finished_labels = "\n\n\n\n".join(labels_list)
-    return finished_labels
+    if containers == {"Box" : 0, "Folder" : 0, "Volume" : 0, "Roll" : 0, "Item": 0}:
+        print("No labels have been created.  Goodbye!")
+        sys.exit()
+    else:
+        for k, v in containers.items():
+            count = 1
+            while count <= v:
+                label_line = donor + "\n" + "Donor no. " + number + "\n" + date + "\n" + k + " " + str(count) + " of " + str(v)
+                count = count + 1
+                labels_list.append(label_line)
+        finished_labels = "\n\n\n\n".join(labels_list)
+        return finished_labels
 
 try:
     donor, donor_number = get_arguments()
